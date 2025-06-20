@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::514329541303:role/LicensingS3Role
+  labels:
+    app.kubernetes.io/managed-by: eksctl
+  name: s3-account
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scube-document-service-depl
+  labels:
+    app: scube-document-service
+spec:
+  selector:
+    matchLabels:
+      app: scube-document-service
+  template:
+    metadata:
+      labels:
+        app: scube-document-service
+    spec:
+      nodeSelector:
+        subnet-type: private
+      imagePullSecrets:
+        - name: aws-ecr-secret
+      serviceAccountName: s3-account
+      containers:
+        - name: scube-document-service
+          image: sandf-service_document
+          ports:
+            - containerPort: 9003
+          resources:
+            requests:
+              memory: "350Mi"
+            limits:
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: scube-document-service-srv.s-and-f.svc.cluster.local
+              path: /api/document-service/actuator/health
+              port: 9003
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9003
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          env:
+            - name: TZ
+              value: "America/New_York"
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                secretKeyRef:
+                  key: spring-profile
+                  name: spring-profile
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-user-pass-secret
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-user-pass-secret
+                  key: password
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-user-pass-secret
+                  key: username
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-user-pass-secret
+                  key: password
+            - name: KEYCLOAK_SWAGGER_AUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-id-secret
+                  key: swagger-client-id
+            - name: KEYCLOAK_ADMIN_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-admin-secret
+                  key: admin-client-id
+            - name: KEYCLOAK_ADMIN_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-admin-secret
+                  key: admin-client-secret
+            - name: ENCRYPTION_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: encryption-secret
+                  key: secret-Key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scube-document-service-srv
+  labels:
+    app: scube-document-service
+spec:
+  selector:
+    app: scube-document-service
+  type: ClusterIP
+  ports:
+    - name: document-port
+      protocol: TCP
+      port: 9003
+      targetPort: 9003

@@ -1,0 +1,102 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="Ben" id="1721228931741-1">
+        <createTable tableName="audit_log_document_history">
+            <column name="document_history_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="audit_log_document_history_pkey"/>
+            </column>
+            <column name="revision_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="audit_log_document_history_pkey"/>
+            </column>
+            <column name="revision_type" type="SMALLINT"/>
+            <column name="conversion_reference" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="properties" type="JSONB"/>
+            <column defaultValueComputed="gen_random_uuid()" name="document_history_uuid" type="UUID"/>
+            <column name="content_type" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="size" type="BIGINT"/>
+            <column name="version_id" type="VARCHAR(255)"/>
+            <column name="document_id" type="BIGINT"/>
+            <column name="version_number" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-2">
+        <createTable tableName="document_history">
+            <column autoIncrement="true" name="document_history_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="document_history_pkey"/>
+            </column>
+            <column name="conversion_reference" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="properties" type="JSONB"/>
+            <column defaultValueComputed="gen_random_uuid()" name="document_history_uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content_type" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="size" type="BIGINT"/>
+            <column name="version_id" type="VARCHAR(255)"/>
+            <column name="document_id" type="BIGINT"/>
+            <column name="version_number" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-3">
+        <addUniqueConstraint columnNames="document_history_uuid" constraintName="uk_nw8q7151euohk44pcxens2imh" tableName="document_history"/>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-4">
+        <addColumn tableName="audit_log_document">
+            <column name="version_id" type="varchar(255 BYTE)"/>
+            <column name="version_number" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-5">
+        <addColumn tableName="document">
+            <column name="version_id" type="varchar(255 BYTE)"/>
+            <column name="version_number" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-6">
+        <addForeignKeyConstraint baseColumnNames="revision_id" baseTableName="audit_log_document_history" constraintName="fkd2v6iq5ods7bekepwcretu0ul" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="audit_log_revision_id" referencedTableName="audit_log_revision" validate="true"/>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-7">
+        <addForeignKeyConstraint baseColumnNames="document_id" baseTableName="document_history" constraintName="fkon7xgqjt10958rqdp9xg0a03m" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="document_id" referencedTableName="document" validate="true"/>
+    </changeSet>
+    <changeSet id="1721228931741-8" author="Ben">
+        <dropColumn
+                tableName="document"
+                columnName="name"/>
+        <dropColumn
+                tableName="audit_log_document"
+                columnName="name"/>
+        <renameColumn
+                tableName="document"
+                oldColumnName="original_name"
+                newColumnName="name"/>
+        <renameColumn
+                tableName="audit_log_document"
+                oldColumnName="original_name"
+                newColumnName="name"/>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-9">
+        <addColumn tableName="audit_log_document">
+            <column name="path" type="varchar(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-10">
+        <addColumn tableName="document">
+            <column name="path" type="varchar(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

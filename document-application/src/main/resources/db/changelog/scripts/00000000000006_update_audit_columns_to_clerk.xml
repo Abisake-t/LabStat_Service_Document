@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="David" id="update-createdby-to-clerk2">
+        <sql>
+            DO '
+            DECLARE
+            tableName text;
+            BEGIN
+            FOR tableName IN (SELECT table_name
+            FROM information_schema.tables
+            WHERE table_type = ''BASE TABLE''
+            and table_name in (
+            SELECT table_name
+            FROM information_schema.columns
+            WHERE column_name IN (''created_by'')
+            and table_schema = ''document''
+            ))
+            LOOP
+            EXECUTE ''UPDATE '' || tableName || ''
+            SET created_by = ''''clerk''''
+            WHERE created_by = ''''isAuthenticated_but_no_username'''''';
+            END LOOP;
+            END ';
+        </sql>
+    </changeSet>
+    <changeSet author="David" id="update-lastModifiedBy-to-clerk2">
+        <sql>
+            DO '
+            DECLARE
+            tableName text;
+            BEGIN
+            FOR tableName IN (SELECT table_name
+            FROM information_schema.tables
+            WHERE table_type = ''BASE TABLE''
+            and table_name in (
+            SELECT table_name
+            FROM information_schema.columns
+            WHERE column_name IN (''last_modified_by'')
+            and table_schema = ''document''
+            ))
+            LOOP
+            EXECUTE ''UPDATE '' || tableName || ''
+            SET last_modified_by = ''''clerk''''
+            WHERE last_modified_by = ''''isAuthenticated_but_no_username'''''';
+            END LOOP;
+            END ';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

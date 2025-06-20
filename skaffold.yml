@@ -1,0 +1,24 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: s-and-f
+build:
+  artifacts:
+    - image: sandf-service_document
+      context: ../SandF_Service_Document
+      jib:
+        project: com.scube.document:document-application
+
+manifests:
+  rawYaml:
+    - deployment.yml
+
+profiles:
+  - name: local
+    activation:
+      - kubeContext: docker-desktop
+    build:
+      local:
+        push: false
+    deploy:
+      kubectl:

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!--@formatter:off-->
+    <include file="classpath:db/changelog/scripts/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/update_the_column_type_on_document_UUID.xml"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000001_audit_logging.xml"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000002_document_seq.xml"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000003_document_sequence_identity.xml"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000004_history_tables.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000005_add_scheduler_table_tbl.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000006_update_audit_columns_to_clerk.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/property_type.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000007_custom_fields_as_json.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000008_add_versioning_columns.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000009_add_keep_original_name_column.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/00000000000010_add_md5Hash_column.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/scripts/000000000000011_shedlock.xml" relativeToChangelogFile="false"/>
+    <!--@formatter:on-->
+</databaseChangeLog>

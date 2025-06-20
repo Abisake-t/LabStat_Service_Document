@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: DocumentService
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+keycloak:
+  authoritiesConverterType: NATIVE
+  host: http://localhost:8443/realms/master
+  public-host: http://localhost:8443/realms/master
+  admin:
+    url: http://localhost:8443
+    realm: master
+    client-id: test
+    client-secret: test
+  swagger:
+    url: http://localhost:8443
+    realm: comparator
+    client-id: test
+
+com.c4-soft.springaddons.oidc:
+  ops:
+    - iss: http://localhost:8443/realms/master
+      jwkSetUri: http://localhost:8443/realms/master/protocol/openid-connect/certs
+      username-claim: preferred_username
+      authorities:
+        - path: $.realm_access.roles
+        - path: $.resource_access.*.roles
+  resource-server:
+    permit-all:
+      - "/"
+      - "/v3/api-docs/**"
+      - "/swagger-ui/**"
+      - "/swagger-ui.html"
+      - "/actuator/**"
+      - "/public/**"
+    cors:
+      - path: /**
+        allowed-origin-patterns:
+          - http://localhost:3000
+          - https://localhost:3000
+          - http://localhost:3030
+
+multi-tenancy:
+  enabled: false
+  keycloak:
+    enabled: false
+  database:
+    enabled: false
+
+com.scube.client:
+  auth: "http://localhost:9001/api/auth"
+
+antivirus:
+  enabled: true
+  service: Mock

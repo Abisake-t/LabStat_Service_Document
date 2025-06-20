@@ -1,0 +1,91 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="davidr (generated)" id="1695360958700-2">
+        <addUniqueConstraint columnNames="document_uuid" constraintName="uk_nnwo6jivqns9t2wvqtmm0w8f5"
+                             tableName="document"/>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-3">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="audit_log_revision_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-4">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="document_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-5">
+        <createTable tableName="audit_log_document">
+            <column name="document_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="audit_log_document_pkey"/>
+            </column>
+            <column name="revision_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="audit_log_document_pkey"/>
+            </column>
+            <column name="revision_type" type="SMALLINT"/>
+            <column name="conversion_reference" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="content_type" type="VARCHAR(255)"/>
+            <column name="document_uuid" type="UUID"/>
+            <column name="document_url" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="original_name" type="VARCHAR(255)"/>
+            <column name="size" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-6">
+        <createTable tableName="audit_log_revision">
+            <column name="audit_log_revision_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="audit_log_revision_pkey"/>
+            </column>
+            <column name="timestamp" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="auditor" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-7">
+        <addColumn tableName="document">
+            <column name="conversion_reference" type="varchar(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-8">
+        <addColumn tableName="document">
+            <column name="created_by" type="varchar(1000 BYTE)" defaultValue="liquibase">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-9">
+        <addColumn tableName="document">
+            <column name="created_date" type="timestamptz" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-10">
+        <addColumn tableName="document">
+            <column name="last_modified_by" type="varchar(1000 BYTE)" defaultValue="liquibase">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-11">
+        <addColumn tableName="document">
+            <column name="last_modified_date" type="timestamptz" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-12">
+        <addForeignKeyConstraint baseColumnNames="revision_id" baseTableName="audit_log_document"
+                                 constraintName="fk2tuw42qtjiwvjokoepb9ttm1p" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="audit_log_revision_id" referencedTableName="audit_log_revision"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="davidr (generated)" id="1695360958700-1">
+        <addNotNullConstraint columnDataType="uuid" columnName="document_uuid" tableName="document" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

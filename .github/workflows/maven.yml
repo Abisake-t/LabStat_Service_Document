@@ -1,0 +1,25 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Maven Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  build:
+    uses: s-Cube-Enterprise/reusable-workflows/.github/workflows/maven-build.yaml@main
+    with:
+      JAVA_VERSION: 21
+    secrets: inherit

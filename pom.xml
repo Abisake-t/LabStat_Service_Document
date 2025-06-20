@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.4</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.scube.document</groupId>
+    <artifactId>DocumentService</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>DocumentService</name>
+    <description>Document microservice</description>
+    <modules>
+        <module>document-application</module>
+        <module>document-client</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <jib.version>3.4.2</jib.version>
+        <liquibase.version>4.22.0</liquibase.version>
+
+        <service-dependicies.version>1.1.2</service-dependicies.version>
+
+        <registry>514329541303.dkr.ecr.us-east-1.amazonaws.com</registry>
+        <imagename>sandf-service_document</imagename>
+        <aws.java.sdk.version>2.20.43</aws.java.sdk.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.scube.dependencies</groupId>
+                <artifactId>ServiceDependiciesLibrary</artifactId>
+                <version>${service-dependicies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.java.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib.version}</version>
+                <configuration>
+                    <container>
+                        <!-- Manually define main class due to CI/CD issues -->
+                        <mainClass>com.scube.document.DocumentServiceApplication</mainClass>
+                        <jvmFlags>
+                            <jvmFlag>-XX:+UseContainerSupport</jvmFlag>
+                            <jvmFlag>-XX:+IdleTuningGcOnIdle</jvmFlag>
+                            <jvmFlag>-XX:+UseCGroupMemoryLimitForHeap</jvmFlag>
+                            <jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
+                        </jvmFlags>
+                    </container>
+                    <to>
+                        <image>${registry}/${imagename}</image>
+                        <credHelper>ecr-login</credHelper>
+                    </to>
+                    <from>
+                        <image>ibm-semeru-runtimes:open-21-jdk</image>
+                    </from>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>codeartifact</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>codeartifact</id>
+                    <url>https://scube-514329541303.d.codeartifact.us-east-1.amazonaws.com/maven/maven/</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+</project>

@@ -1,0 +1,24 @@
+name: "Production: Update, Build & Deploy"
+run-name: Deploy ${{ github.repository }} to Production by @${{ github.actor }}
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  production-build-deploy:
+    uses: s-Cube-Enterprise/reusable-workflows/.github/workflows/jib-build-publish.yaml@main
+    with:
+      AWS_REGION: us-east-1
+      ECR_REPOSITORY: sandf-service_document
+      EKS_DEPLOYMENT: scube-document-service-depl
+      EKS_CONTAINER: scube-document-service
+      KUBE_NAMESPACE: production
+      IMAGE_TAG: ${{ github.ref_name }}
+      JAVA_VERSION: 21
+      TARGET_ENVIRONMENT: production
+    secrets: inherit

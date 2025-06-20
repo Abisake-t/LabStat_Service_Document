@@ -1,0 +1,142 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="postgres (generated)" id="1711488007190-41">
+        <addColumn tableName="audit_log_document">
+            <column name="properties" type="jsonb"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-42">
+        <addColumn tableName="document">
+            <column name="properties" type="jsonb"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-43">
+        <dropUniqueConstraint constraintName="audit_log_property_type_property_type_uuid_key" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-44">
+        <dropColumn columnName="created_by" tableName="audit_log_scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-45">
+        <dropColumn columnName="created_date" tableName="audit_log_scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-1">
+        <modifyDataType columnName="created_by" newDataType="varchar(255)" tableName="document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-2">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="created_by" tableName="document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-3">
+        <modifyDataType columnName="created_by" newDataType="varchar(255)" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-4">
+        <modifyDataType columnName="created_by" newDataType="varchar(255)" tableName="scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-5">
+        <dropDefaultValue columnDataType="timestamp" columnName="created_date" tableName="document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-6">
+        <modifyDataType columnName="created_date" newDataType="timestamp" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-7">
+        <modifyDataType columnName="created_date" newDataType="timestamp" tableName="scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-8">
+        <addNotNullConstraint columnDataType="timestamp" columnName="created_date" tableName="scheduler" validate="true"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-9">
+        <addDefaultValue columnDataType="uuid" columnName="document_uuid" defaultValueComputed="gen_random_uuid()" tableName="audit_log_document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-10">
+        <addDefaultValue columnDataType="uuid" columnName="document_uuid" defaultValueComputed="gen_random_uuid()" tableName="document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-11">
+        <modifyDataType columnName="last_modified_by" newDataType="varchar(255)" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-12">
+        <dropNotNullConstraint columnDataType="varchar(255)" columnName="last_modified_by" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-13">
+        <modifyDataType columnName="last_modified_by" newDataType="varchar(255)" tableName="audit_log_scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-14">
+        <modifyDataType columnName="last_modified_by" newDataType="varchar(255)" tableName="document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-15">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="last_modified_by" tableName="document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-16">
+        <modifyDataType columnName="last_modified_by" newDataType="varchar(255)" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-17">
+        <modifyDataType columnName="last_modified_by" newDataType="varchar(255)" tableName="scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-18">
+        <modifyDataType columnName="last_modified_date" newDataType="timestamp" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-19">
+        <dropNotNullConstraint columnDataType="timestamp" columnName="last_modified_date" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-20">
+        <modifyDataType columnName="last_modified_date" newDataType="timestamp" tableName="audit_log_scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-21">
+        <dropDefaultValue columnDataType="timestamp" columnName="last_modified_date" tableName="document"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-22">
+        <modifyDataType columnName="last_modified_date" newDataType="timestamp" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-23">
+        <modifyDataType columnName="last_modified_date" newDataType="timestamp" tableName="scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-24">
+        <addNotNullConstraint columnDataType="timestamp" columnName="last_modified_date" tableName="scheduler" validate="true"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-25">
+        <modifyDataType columnName="property_name" newDataType="varchar(250)" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-26">
+        <dropNotNullConstraint columnDataType="varchar(250)" columnName="property_name" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-27">
+        <dropDefaultValue columnDataType="varchar(250)" columnName="property_name" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-28">
+        <modifyDataType columnName="property_name" newDataType="varchar(250)" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-29">
+        <dropDefaultValue columnDataType="varchar(250)" columnName="property_name" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-30">
+        <dropNotNullConstraint columnDataType="varchar(255)" columnName="property_type" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-31">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="property_type" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-32">
+        <dropDefaultValue columnDataType="varchar(255)" columnName="property_type" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-33">
+        <dropNotNullConstraint columnDataType="uuid" columnName="property_type_uuid" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-34">
+        <addDefaultValue columnDataType="uuid" columnName="property_type_uuid" defaultValueComputed="gen_random_uuid()" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-35">
+        <addDefaultValue columnDataType="uuid" columnName="property_type_uuid" defaultValueComputed="gen_random_uuid()" tableName="property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-36">
+        <dropNotNullConstraint columnDataType="smallint(5)" columnName="revision_type" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-37">
+        <dropNotNullConstraint columnDataType="uuid" columnName="scheduler_uuid" tableName="scheduler"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-38">
+        <dropNotNullConstraint columnDataType="varchar(100)" columnName="table_name" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-39">
+        <dropDefaultValue columnDataType="varchar(100)" columnName="table_name" tableName="audit_log_property_type"/>
+    </changeSet>
+    <changeSet author="postgres (generated)" id="1711488007190-40">
+        <dropDefaultValue columnDataType="varchar(100)" columnName="table_name" tableName="property_type"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,73 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="createDocSchedulerTable" author="ben">
+        <createTable tableName="scheduler">
+            <column name="scheduler_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="scheduler_pkey"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)"/>
+            <column name="cron" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scheduler_uuid" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp"/>
+            <column name="last_modified_date" type="timestamp"/>
+            <column name="conversion_reference" type="varchar(255 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ben" id="DocSchedulerUuidUniqueConstraint">
+        <addUniqueConstraint columnNames="scheduler_uuid" constraintName="uk_scheduler_uuid"
+                             tableName="scheduler"/>
+    </changeSet>
+    <changeSet author="ben" id="DocSchedulerNameUniqueConstraint">
+        <addUniqueConstraint columnNames="name" constraintName="uk_scheduler_name"
+                             tableName="scheduler"/>
+    </changeSet>
+    <changeSet author="ben" id="createAuditLogDocSchedulerTable">
+        <createTable tableName="audit_log_scheduler">
+            <column name="scheduler_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="audit_log_scheduler_pkey"/>
+            </column>
+            <column name="revision_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="audit_log_scheduler_pkey"/>
+            </column>
+            <column name="revision_type" type="SMALLINT"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="cron" type="varchar(255)"/>
+            <column name="status" type="varchar(255)"/>
+            <column name="scheduler_uuid" type="uuid"/>
+            <column name="created_by" type="varchar(1000)"/>
+            <column name="last_modified_by" type="varchar(1000)"/>
+            <column name="created_date" type="timestamp"/>
+            <column name="last_modified_date" type="timestamp"/>
+            <column name="conversion_reference" type="varchar(255 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="addColumn_scheduler_properties" author="David">
+        <addColumn tableName="scheduler">
+            <column name="properties" type="JSONB"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="addColumn_audit_log_scheduler_properties" author="David">
+        <addColumn tableName="audit_log_scheduler">
+            <column name="properties" type="JSONB"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

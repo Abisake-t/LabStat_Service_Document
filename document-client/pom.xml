@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.4</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.scube.document</groupId>
+    <artifactId>document-client</artifactId>
+    <version>1.9.0</version>
+    <name>document-client</name>
+    <description>DocumentServiceClient Library for use across the microservices</description>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <application-module>document-application</application-module>
+
+        <service-dependicies.version>1.1.2</service-dependicies.version>
+        <service-client-library.version>1.4.2</service-client-library.version>
+        <jib.version>3.4.2</jib.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>1.18.32</version>
+        </dependency>
+         <dependency>
+            <groupId>com.scube.client</groupId>
+            <artifactId>http-exchange-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.scube.client</groupId>
+            <artifactId>http-exchange-client-autoconfiguration</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib.version}</version>
+                <configuration>
+                    <!-- we don't want jib to execute on this module -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources-to-generated-source</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${basedir}/target/generated-sources/annotations
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ../${application-module}/target/generated-sources/annotations
+                                    </directory>
+                                    <includes>
+                                        <include>**/*gen_dto*/**</include>
+
+                                        <include>**/*HttpExchangeProxy.java</include>
+                                        <include>**/*QueryParams*.java</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-to-generated-source-to-src</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${basedir}/src/main/java/kljgdekrjgnedkgjnrtekjgnerkjgn
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ../${application-module}/target/generated-sources/annotations
+                                    </directory>
+                                    <includes>
+                                        <include>**/*gen_dto*/**</include>
+
+                                        <include>**/*HttpExchangeProxy.java</include>
+                                        <include>**/*QueryParams*.java</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--plugin to clean up the copied files afterward-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>delete-copied-generated-dir-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete includeemptydirs="true" failonerror="false">
+                                    <fileset dir="${basedir}/src/main/java/kljgdekrjgnedkgjnrtekjgnerkjgn">
+                                    </fileset>
+                                </delete>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>delete-copied-generated-dir-after-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete includeemptydirs="true" failonerror="false">
+                                    <fileset dir="${basedir}/src/main/java/kljgdekrjgnedkgjnrtekjgnerkjgn">
+                                    </fileset>
+                                </delete>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.12.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.32</version>
+                        </path>
+                       <path>
+                            <groupId>com.scube.client</groupId>
+                            <artifactId>http-exchange-generator</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>codeartifact</id>
+            <name>codeartifact</name>
+            <url>https://scube-514329541303.d.codeartifact.us-east-1.amazonaws.com/maven/maven/</url>
+        </repository>
+    </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.scube.dependencies</groupId>
+                <artifactId>ServiceDependiciesLibrary</artifactId>
+                <version>${service-dependicies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>codeartifact</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>codeartifact</id>
+                    <url>https://scube-514329541303.d.codeartifact.us-east-1.amazonaws.com/maven/maven/</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+</project>

@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="Ben" id="1721228931741-11">
+        <addColumn tableName="document">
+            <column name="stored_with_original_name" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-12">
+        <addColumn tableName="audit_log_document">
+            <column name="stored_with_original_name" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ben" id="1721228931741-13">
+        <sql>
+            update document set stored_with_original_name = false;
+            update audit_log_document set stored_with_original_name = false;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,142 @@
+server:
+  port: 9003
+  servlet:
+    context-path: /api/document-service
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+    include-exception: true
+    include-client-error-message: true
+    include-server-error-message: true
+    send-client-error-email: false
+    send-server-error-email: false
+  forward-headers-strategy: framework
+
+logging:
+  pattern:
+    level: "%5p [tenantId=%X{tenantId:-}], [%X{traceId:-},%X{spanId:-}] [user=%X{userEmail:-}]"
+  level:
+    org.springframework.web: "info"
+    org.hibernate: "error"
+    liquibase: "info"
+    com.scube: "info"
+
+spring:
+  application:
+    name: DocumentService
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    generate-ddl: true
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 200MB
+      location: ${java.io.tmpdir}
+
+springdoc:
+  show-actuator: true
+  swagger-ui:
+    filter: true
+
+keycloak:
+  host: https://dev-comparator.appliedtech.ai/auth
+  public-host: https://dev-comparator.appliedtech.ai/auth
+  admin:
+    url: ${keycloak.host}
+    realm: master
+    client-id: ${KEYCLOAK_ADMIN_CLIENT_ID}
+    client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+  swagger:
+    url: ${keycloak.public-host}
+    realm: comparator
+    client-id: ${KEYCLOAK_SWAGGER_AUTH_CLIENT_ID}
+
+com.c4-soft.springaddons.oidc:
+  ops:
+    - iss: ${keycloak.host}
+      jwkSetUri: ${keycloak.host}
+      username-claim: preferred_username
+      authorities:
+        - path: $.realm_access.roles
+        - path: $.resource_access.*.roles
+    - iss: ${keycloak.public-host}
+      jwk-set-uri: ${keycloak.host}
+      username-claim: preferred_username
+      authorities:
+        - path: $.realm_access.roles
+        - path: $.resource_access.*.roles
+  resource-server:
+    permit-all:
+      - "/"
+      - "/v3/api-docs/**"
+      - "/swagger-ui/**"
+      - "/swagger-ui.html"
+      - "/actuator/**"
+      - "/public/**"
+    cors:
+      - path: /**
+        allowed-origin-patterns:
+          - https://dev-comparator.appliedtech.ai
+          - http://localhost:3000
+          - https://localhost:3000
+
+multi-tenancy:
+  enabled: true
+  async:
+    enabled: true
+  caching:
+    enabled: true
+  keycloak:
+    enabled: true
+    active-tenant:
+      realm: comparator
+      client-to-clone: backend
+  management:
+    enabled: true
+  rabbitmq:
+    enabled: true
+    host: "rabbitmq.s-and-f.svc.cluster.local"
+    port: 5672
+  scheduling:
+    enabled: true
+  database:
+    enabled: true
+    type: DATABASE_PER_TENANT
+    default-tenant: postgres
+    tenancy-format: "%s"
+    liquibase:
+      change-log: "classpath:/db/changelog/db.changelog-master.xml"
+    datasource:
+      url: "jdbc:postgresql://172.0.100.115:5432/postgres?currentSchema=document"
+      username: ${SPRING_DATASOURCE_USERNAME}
+      password: ${SPRING_DATASOURCE_PASSWORD}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximumPoolSize: 5
+        minimumIdle: 5
+        idleTimeout: 30000
+        maxLifetime: 60000
+        connectionTimeout: 30000
+
+aws:
+  region: us-east-1
+  storageType: s3
+
+scheduling:
+  enabled: true
+
+com.scube.client:
+  auth: "http://scube-auth-service-srv.s-and-f.svc.cluster.local:9001/api/auth"
+
+antivirus:
+  enabled: true
+  service: ClamAV
+  clamav:
+    host: 172.0.100.94
+    port: 3310
