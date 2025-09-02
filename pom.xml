@@ -30,7 +30,7 @@
 
         <registry>514329541303.dkr.ecr.us-east-1.amazonaws.com</registry>
         <imagename>sandf-service_document</imagename>
-        <aws.java.sdk.version>2.20.43</aws.java.sdk.version>
+        <aws.java.sdk.version>2.33.0</aws.java.sdk.version>
     </properties>
 
     <dependencyManagement>
